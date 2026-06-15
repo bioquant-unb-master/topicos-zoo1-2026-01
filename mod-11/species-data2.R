@@ -164,3 +164,32 @@ cand_models <- fitList(
 
 # Compute the summary output for model selection. When explicitly stating which candidate model is the null model, then a Nagelkerke R-square is computed.
 (m_sel <- modSel(cand_models, nullmod="p(1) psi(1)"))
+#
+library(corrplot)
+
+# We first estimate a correlation matrix from the covariates 
+# We use Spearman rank correlation coefficient, as we do not know 
+# whether all variables are normally distributed.
+cor_mat <- cor(occ_env_redkite@siteCovs, method='spearman')
+
+# We can visualise this correlation matrix. For better visibility, 
+# we plot the correlation coefficients as percentages.
+corrplot.mixed(cor_mat, tl.pos='lt', tl.cex=0.6, number.cex=0.5, addCoefasPercent=T)
+library(devtools)
+devtools::install_git("https://gitup.uni-potsdam.de/macroecology/mecofun.git")
+library(mecofun)
+
+# Run select07()
+var_sel <- select07_unm(occ_env_redkite, names(occ_env_redkite@siteCovs), threshold=0.7)
+
+# Check out the structure of the resulting object:
+str(var_sel)
+# We extract the names of the weakly correlated predictors ordered by the univariate variable importance in terms of AIC:
+pred_sel <- var_sel$pred_sel
+print(pred_sel)
+# Number of presences
+sum(apply(redkite_env_thinned[,4:6], 1, max))
+# Number of absence
+nrow(redkite_env_thinned) - sum(apply(redkite_env_thinned[,4:6], 1, max))
+# Save (non-terra) objects from the workspace:
+save(occ_redkite, occ_env_redkite, pred_sel, file='Occ4_SimpleOccModel.RData')
