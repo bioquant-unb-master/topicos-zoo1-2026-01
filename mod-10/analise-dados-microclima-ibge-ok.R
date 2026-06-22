@@ -1,7 +1,8 @@
 library(readxl)
+library(tidyverse)
 
 #Vamos fazer a organização e sistematização dos dados
-consolidado <- as.data.frame(ibge_recor_microclima_ponte_corujao_26maio2026)
+consolidado <- as.data.frame(ibge_recor_microclima_ponte_corujao_26maio2026_Sheet1)
 saveRDS(consolidado, file="consolidado1.rds")
 save(consolidado, file="consolidado2.RData")
 
